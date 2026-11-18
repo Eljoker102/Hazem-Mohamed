@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو التصميم الواقعي واليافطات | AI Pro Studio</title>
+    
+    <!-- تحميل Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- تحميل خط Cairo و Tajawal للغة العربية بشكل احترافي -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- أيقونات Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'Tajawal', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff8eb',
+                            100: '#ffecc6',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            900: '#78350f',
+                        },
+                        dark: {
+                            950: '#09090b',
+                            900: '#121215',
+                            800: '#1c1c21',
+                            700: '#27272e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* تحسينات عامة وتأثيرات بصرية */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #09090b;
+            color: #f4f4f5;
+            overflow-x: hidden;
+        }
+
+        /* شريط تمرير مخصص */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121215;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272e;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* تأثير التوهج الخلفي */
+        .glow-effect {
+            box-shadow: 0 0 40px -10px rgba(245, 158, 11, 0.25);
+        }
+
+        /* تأثير النبض أثناء التحميل */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton-loader {
+            background: linear-gradient(90deg, #1c1c21 25%, #2a2a32 50%, #1c1c21 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-brand-500 selection:text-black">
+
+    <!-- الشريط العلوي (Navbar) -->
+    <header class="sticky top-0 z-40 bg-dark-900/80 backdrop-blur-lg border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-black font-black text-xl shadow-lg shadow-brand-500/20">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                        بصمة برو <span class="text-xs bg-brand-500/20 text-brand-400 border border-brand-500/30 px-2 py-0.5 rounded-full font-bold">واقعي 4K</span>
+                    </h1>
+                    <p class="text-[11px] text-zinc-400 hidden sm:block">استوديو توليد اليافطات والتصاميم التجارية الواقعية</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleGuideModal()" class="text-xs sm:text-sm bg-dark-800 hover:bg-dark-700 text-zinc-300 px-3 py-2 rounded-xl border border-zinc-700/80 transition flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-brand-400"></i>
+                    <span class="hidden sm:inline">كيف تحصل على نتيجة واقعية؟</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        
+        <!-- نظام الرسائل والتنبيهات المخصص (بديل alert) -->
+        <div id="toast-container" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+            
+            <!-- العمود الأيمن: لوحة التحكم وإعدادات التصميم (5 أعمدة) -->
+            <div class="lg:col-span-5 space-y-5 bg-dark-900 p-5 sm:p-6 rounded-2xl border border-zinc-800/90 shadow-xl">
+                
+                <!-- 0. اختيار نوع التصميم (استوديو شامل) -->
+                <div class="bg-dark-800/60 p-4 rounded-xl border border-zinc-800 space-y-3">
+                    <label class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+                        <i class="fa-solid fa-compass-drafting text-brand-400"></i>
+                        نوع التصميم المطلوب:
+                    </label>
+                    <div class="grid grid-cols-3 gap-2" id="design-type-options">
+                        <button type="button" data-type="signboard" class="design-type-btn active py-2 px-2 rounded-lg border border-brand-500 bg-brand-500/15 text-white text-xs font-bold transition flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-store text-brand-400"></i>
+                            <span>يافطة محل</span>
+                        </button>
+                        <button type="button" data-type="social" class="design-type-btn py-2 px-2 rounded-lg border border-zinc-700 bg-dark-900 hover:border-zinc-600 text-zinc-300 text-xs font-bold transition flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-share-nodes text-zinc-400"></i>
+                            <span>سوشيال ميديا</span>
+                        </button>
+                        <button type="button" data-type="menu" class="design-type-btn py-2 px-2 rounded-lg border border-zinc-700 bg-dark-900 hover:border-zinc-600 text-zinc-300 text-xs font-bold transition flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-utensils text-zinc-400"></i>
+                            <span>منيو / فلاير</span>
+                        </button>
+                        <button type="button" data-type="card" class="design-type-btn py-2 px-2 rounded-lg border border-zinc-700 bg-dark-900 hover:border-zinc-600 text-zinc-300 text-xs font-bold transition flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-address-card text-zinc-400"></i>
+                            <span>كارت شخصي</span>
+                        </button>
+                        <button type="button" data-type="packaging" class="design-type-btn py-2 px-2 rounded-lg border border-zinc-700 bg-dark-900 hover:border-zinc-600 text-zinc-300 text-xs font-bold transition flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-box-open text-zinc-400"></i>
+                            <span>علبة / تغليف</span>
+                        </button>
+                        <button type="button" data-type="custom" class="design-type-btn py-2 px-2 rounded-lg border border-zinc-700 bg-dark-900 hover:border-zinc-600 text-zinc-300 text-xs font-bold transition flex flex-col items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square text-zinc-400"></i>
+                            <span>أخرى (اكتبها)</span>
+                        </button>
+                    </div>
+                    <!-- حقل كتابة نوع التصميم المخصص -->
+                    <div id="custom-design-type-wrapper" class="hidden pt-1">
+                        <input type="text" id="custom-design-type" 
+                            class="w-full bg-dark-900 border border-brand-500/60 focus:border-brand-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-zinc-500 transition"
+                            placeholder="اكتب نوع التصميم اللي محتاجه (مثال: رول أب، بوستر فيلم، استيكر زجاجة، غلاف كتاب...)">
+                    </div>
+                </div>
+
+                <!-- مؤشر وضع التصميم الحالي (مرحلة 1: للطباعة/النسخة الأساسية / مرحلة 2: على الواجهة) -->
+                <div id="stage-switcher-wrapper" class="bg-dark-950 p-1.5 rounded-xl border border-zinc-800 grid grid-cols-2 gap-1.5">
+                    <button type="button" id="mode-flat-btn" onclick="setDesignMode('flat')" 
+                        class="py-2 px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-2 bg-brand-500 text-black shadow">
+                        <i class="fa-solid fa-print"></i>
+                        1. تصميم اليافطة (للطباعة)
+                    </button>
+                    <button type="button" id="mode-mockup-btn" onclick="setDesignMode('mockup')" 
+                        class="py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white">
+                        <i class="fa-solid fa-store"></i>
+                        2. عرضها على الواجهة
+                    </button>
+                </div>
+
+                <!-- 1. وصف التصميم المطلوب -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="user-prompt" class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+                            <i class="fa-solid fa-pen-nib text-brand-400"></i>
+                            <span id="prompt-label">تفاصيل التصميم وألوانه وعناصره:</span>
+                        </label>
+                        <button onclick="fillExamplePrompt()" class="text-xs text-brand-400 hover:text-brand-300 underline font-semibold transition">
+                            تجربة مثال (محل ع الفحم)
+                        </button>
+                    </div>
+                    <textarea id="user-prompt" rows="3" 
+                        class="w-full bg-dark-800 border border-zinc-700 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 rounded-xl p-3.5 text-sm text-white placeholder-zinc-500 transition resize-none leading-relaxed"
+                        placeholder="اشرح فكرتك ببساطة: الألوان، الصور أو العناصر الموجودة في التصميم، الجو العام..."></textarea>
+                </div>
+
+                <!-- 2. النص المراد كتابته على التصميم -->
+                <div class="bg-dark-800/60 p-4 rounded-xl border border-zinc-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label for="sign-text" class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+                            <i class="fa-solid fa-font text-brand-400"></i>
+                            <span id="text-label">العنوان الرئيسي المكتوب في التصميم:</span>
+                        </label>
+                        <span class="text-[11px] text-zinc-400 bg-dark-900 px-2 py-0.5 rounded-md">دقة طباعة</span>
+                    </div>
+                    <input type="text" id="sign-text" 
+                        class="w-full bg-dark-900 border border-zinc-700 focus:border-brand-500 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-zinc-500 transition"
+                        placeholder="مثال: مشويات البرنس ع الفحم">
+                    
+                    <input type="text" id="sign-subtext" 
+                        class="w-full bg-dark-900 border border-zinc-700 focus:border-brand-500 rounded-xl px-3.5 py-2 text-xs text-zinc-300 placeholder-zinc-500 transition"
+                        placeholder="نص فرعي أو تفاصيل إضافية اختيارية (مثال: كباب • كفتة • طرب • رقم التليفون)">
+                </div>
+
+                <!-- 3. نوع الخامة / أسلوب التصميم (مع إدخال خامة مخصصة بأسلوب بسيط) -->
+                <div class="space-y-2.5">
+                    <label class="text-sm font-bold text-zinc-200 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-brand-400"></i>
+                        <span id="material-label">الخامة / أسلوب التنفيذ:</span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-2" id="material-options">
+                        <!-- خيار 1 -->
+                        <button type="button" data-material="3d_acrylic" class="material-btn active text-right p-2.5 rounded-xl border border-brand-500 bg-brand-500/10 transition flex flex-col gap-0.5">
+                            <span class="text-xs font-bold text-white flex items-center justify-between">
+                                حروف بارزة 3D مضيئة
+                                <i class="fa-solid fa-check-circle text-brand-400 check-icon"></i>
+                            </span>
+                            <span class="text-[10px] text-zinc-400">كلادينج أسود + ليد خلفي</span>
+                        </button>
+                        <!-- خيار 2 -->
+                        <button type="button" data-material="rustic_wood" class="material-btn text-right p-2.5 rounded-xl border border-zinc-700 bg-dark-800 hover:border-zinc-600 transition flex flex-col gap-0.5">
+                            <span class="text-xs font-bold text-white flex items-center justify-between">
+                                خشب محروق ومعدن
+                                <i class="fa-solid fa-check-circle text-brand-400 check-icon hidden"></i>
+                            </span>
+                            <span class="text-[10px] text-zinc-400">مناسب لمطاعم الفحم والبرجر</span>
+                        </button>
+                        <!-- خيار 3 -->
+                        <button type="button" data-material="neon_industrial" class="material-btn text-right p-2.5 rounded-xl border border-zinc-700 bg-dark-800 hover:border-zinc-600 transition flex flex-col gap-0.5">
+                            <span class="text-xs font-bold text-white flex items-center justify-between">
+                                نيون عصري + طوب حراري
+                                <i class="fa-solid fa-check-circle text-brand-400 check-icon hidden"></i>
+                            </span>
+                            <span class="text-[10px] text-zinc-400">إضاءة دافئة وجذابة</span>
+                        </button>
+                        <!-- خيار 4 -->
+                        <button type="button" data-material="luxury_gold" class="material-btn text-right p-2.5 rounded-xl border border-zinc-700 bg-dark-800 hover:border-zinc-600 transition flex flex-col gap-0.5">
+                            <span class="text-xs font-bold text-white flex items-center justify-between">
+                                ستانلس ذهبي ورخام
+                                <i class="fa-solid fa-check-circle text-brand-400 check-icon hidden"></i>
+                            </span>
+                            <span class="text-[10px] text-zinc-400">فخامة للمحلات والبراندات</span>
+                        </button>
+                        <!-- خيار 5 -->
+                        <button type="button" data-material="modern_print" class="material-btn text-right p-2.5 rounded-xl border border-zinc-700 bg-dark-800 hover:border-zinc-600 transition flex flex-col gap-0.5">
+                            <span class="text-xs font-bold text-white flex items-center justify-between">
+                                جرافيك مطبوع (فليكس/بانر)
+                                <i class="fa-solid fa-check-circle text-brand-400 check-icon hidden"></i>
+                            </span>
+                            <span class="text-[10px] text-zinc-400">للمطبوعات والسوشيال والمنيو</span>
+                        </button>
+                        <!-- خيار 6: خامة مخصصة -->
+                        <button type="button" data-material="custom_material" class="material-btn text-right p-2.5 rounded-xl border border-zinc-700 bg-dark-800 hover:border-zinc-600 transition flex flex-col gap-0.5">
+                            <span class="text-xs font-bold text-brand-400 flex items-center justify-between">
+                                ✍️ اكتب الخامة بنفسك
+                                <i class="fa-solid fa-check-circle text-brand-400 check-icon hidden"></i>
+                            </span>
+                            <span class="text-[10px] text-zinc-400">اوصفها بكلامك البسيط</span>
+                        </button>
+                    </div>
+
+                    <!-- حقل كتابة الخامة المخصصة بأسلوب بسيط -->
+                    <div id="custom-material-wrapper" class="hidden pt-1">
+                        <input type="text" id="custom-material-input" 
+                            class="w-full bg-dark-900 border border-brand-500/60 focus:border-brand-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500 transition"
+                            placeholder="اوصف الخامة ببساطة (مثال: قماش كتان، ورق كرتون مقوى مطفي، صاج قديم مصدي، زجاج شفاف، خشب أبيض...)">
+                    </div>
+                </div>
+
+                <!-- 4. المقاس الدقيق (جاهز أو يدوي مع اختيار الوحدة) + الإضاءة -->
+                <div class="bg-dark-800/60 p-4 rounded-xl border border-zinc-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-zinc-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-ruler-combined text-brand-400"></i>
+                            مقاس وأبعاد التصميم:
+                        </label>
+                        <div class="flex bg-dark-950 p-0.5 rounded-lg border border-zinc-700 text-[11px]">
+                            <button type="button" id="size-mode-preset" onclick="toggleSizeMode('preset')" class="px-2.5 py-1 rounded-md bg-brand-500 text-black font-bold transition">مقاسات جاهزة</button>
+                            <button type="button" id="size-mode-manual" onclick="toggleSizeMode('manual')" class="px-2.5 py-1 rounded-md text-zinc-400 hover:text-white font-semibold transition">مقاس يدوي</button>
+                        </div>
+                    </div>
+
+                    <!-- وضع المقاسات الجاهزة -->
+                    <div id="preset-size-box">
+                        <select id="aspect-ratio" class="w-full bg-dark-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-xs text-white focus:border-brand-500 outline-none">
+                            <option value="16:9">16:9 (بانر عرضي قياسي / يافطة)</option>
+                            <option value="21:9">21:9 (يافطة واجهة عريضة جداً)</option>
+                            <option value="1:1">1:1 (مربع - بوست سوشيال ميديا / لوجو)</option>
+                            <option value="4:5">4:5 (بوست انستجرام / فيسبوك رأسي)</option>
+                            <option value="9:16">9:16 (ستوري / ريلز / رول أب طولي)</option>
+                            <option value="3:4">3:4 (منيو / فلاير / بوستر A4)</option>
+                            <option value="4:3">4:3 (كارت شخصي / لوحة عريضة)</option>
+                        </select>
+                    </div>
+
+                    <!-- وضع المقاس اليدوي مع اختيار الوحدة -->
+                    <div id="manual-size-box" class="hidden space-y-2">
+                        <div class="grid grid-cols-12 gap-2 items-center">
+                            <div class="col-span-4">
+                                <label class="text-[10px] text-zinc-400 block mb-1">العرض (Width)</label>
+                                <input type="number" id="manual-width" value="300" min="1" step="any" oninput="updateCalculatedRatio()"
+                                    class="w-full bg-dark-900 border border-zinc-700 focus:border-brand-500 rounded-lg px-2.5 py-2 text-xs text-white text-center font-bold">
+                            </div>
+                            <div class="col-span-4">
+                                <label class="text-[10px] text-zinc-400 block mb-1">الارتفاع (Height)</label>
+                                <input type="number" id="manual-height" value="100" min="1" step="any" oninput="updateCalculatedRatio()"
+                                    class="w-full bg-dark-900 border border-zinc-700 focus:border-brand-500 rounded-lg px-2.5 py-2 text-xs text-white text-center font-bold">
+                            </div>
+                            <div class="col-span-4">
+                                <label class="text-[10px] text-zinc-400 block mb-1">الوحدة</label>
+                                <select id="size-unit" onchange="updateCalculatedRatio()"
+                                    class="w-full bg-dark-900 border border-zinc-700 focus:border-brand-500 rounded-lg px-2 py-2 text-xs text-brand-400 font-bold outline-none">
+                                    <option value="cm">سم (cm)</option>
+                                    <option value="m">متر (m)</option>
+                                    <option value="px">بيكسل (px)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] bg-dark-900/80 px-3 py-1.5 rounded-lg border border-zinc-800">
+                            <span class="text-zinc-400">نسبة الأبعاد المحسوبة تلقائياً:</span>
+                            <span id="calculated-ratio-badge" class="text-brand-400 font-mono font-bold">21:9 (بانورامي عريض)</span>
+                        </div>
+                    </div>
+
+                    <!-- إعداد الإضاءة للواجهة (يظهر لليافطات) -->
+                    <div id="lighting-wrapper" class="pt-1 opacity-50 pointer-events-none transition">
+                        <label for="lighting-select" class="text-xs font-bold text-zinc-300 mb-1.5 block">إضاءة الواجهة (للمرحلة 2):</label>
+                        <select id="lighting-select" class="w-full bg-dark-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white focus:border-brand-500 outline-none">
+                            <option value="night_street">ليلاً (إضاءة اليافطة متوهجة)</option>
+                            <option value="golden_hour">وقت الغروب (إضاءة دافئة)</option>
+                            <option value="daylight">نهاراً (ضوء شمس طبيعي)</option>
+                            <option value="cinematic_smoke">إضاءة درامية مع دخان شواء</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- زر التوليد الرئيسي -->
+                <button id="generate-btn" onclick="generateRealisticImage()" 
+                    class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-brand-500 to-amber-600 hover:from-brand-400 hover:to-amber-500 text-black font-extrabold text-base shadow-lg shadow-brand-500/25 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2.5">
+                    <i id="gen-btn-icon" class="fa-solid fa-print text-lg"></i>
+                    <span id="gen-btn-text">تصميم اليافطة للطباعة (المرحلة 1)</span>
+                </button>
+
+                <!-- قوالب سريعة جاهزة -->
+                <div class="pt-2 border-t border-zinc-800">
+                    <p class="text-xs text-zinc-400 mb-2 font-semibold">أفكار سريعة بضغطة زر:</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="applyPreset('grill')" class="text-[11px] bg-dark-800 hover:bg-zinc-700 text-zinc-300 px-2.5 py-1.5 rounded-lg border border-zinc-700/70 transition">
+                            🔥 مطعم مشويات ع الفحم
+                        </button>
+                        <button onclick="applyPreset('cafe')" class="text-[11px] bg-dark-800 hover:bg-zinc-700 text-zinc-300 px-2.5 py-1.5 rounded-lg border border-zinc-700/70 transition">
+                            ☕ كافيه ومحمصة قهوة
+                        </button>
+                        <button onclick="applyPreset('barber')" class="text-[11px] bg-dark-800 hover:bg-zinc-700 text-zinc-300 px-2.5 py-1.5 rounded-lg border border-zinc-700/70 transition">
+                            💈 صالون حلاقة رجالي
+                        </button>
+                        <button onclick="applyPreset('burger')" class="text-[11px] bg-dark-800 hover:bg-zinc-700 text-zinc-300 px-2.5 py-1.5 rounded-lg border border-zinc-700/70 transition">
+                            🍔 مطعم سماش برجر
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- العمود الأيسر: منطقة عرض النتيجة والتعديل التفاعلي (7 أعمدة) -->
+            <div class="lg:col-span-7 space-y-5">
+                
+                <!-- إطار العرض الرئيسي -->
+                <div class="bg-dark-900 rounded-2xl border border-zinc-800 overflow-hidden shadow-2xl glow-effect relative">
+                    
+                    <!-- شريط أدوات الصورة العلوى -->
+                    <div class="px-4 py-3 bg-dark-800/80 border-b border-zinc-800 flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-bold text-zinc-300" id="status-badge">المرحلة 1: جاهز لتصميم اليافطة المسطحة</span>
+                        </div>
+                        <div class="flex items-center gap-2" id="image-actions" style="display: none;">
+                            <!-- زر الانتقال للمرحلة الثانية: تركيب اليافطة على الواجهة -->
+                            <button id="mount-to-store-btn" onclick="mountCurrentBannerToStorefront()" 
+                                class="text-xs bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/20">
+                                <i class="fa-solid fa-store"></i>
+                                <span>شاهدها على واجهة المحل الآن!</span>
+                            </button>
+                            <button onclick="downloadImage()" class="text-xs bg-brand-500 hover:bg-brand-400 text-black font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-download"></i>
+                                تحميل الصورة
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- حاوية الصورة / حالة الانتظار / حالة التحميل -->
+                    <div class="relative min-h-[360px] sm:min-h-[460px] flex items-center justify-center bg-dark-950 p-4">
+                        
+                        <!-- 1. الحالة الافتراضية قبل التوليد -->
+                        <div id="empty-state" class="text-center max-w-md mx-auto p-6 space-y-4">
+                            <div class="w-20 h-20 rounded-2xl bg-dark-800 border border-zinc-700 mx-auto flex items-center justify-center text-3xl text-brand-400 shadow-inner">
+                                <i class="fa-solid fa-ruler-combined"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-white">خطوتان فقط: صمّم للطباعة ثم عاين على الواجهة</h3>
+                            <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                                1️⃣ أولاً: سنقوم بتصميم <strong>اليافطة مسطحة (2D)</strong> بدون زوايا أو شوارع لتكون جاهزة للطباعة.<br>
+                                2️⃣ ثانياً: بضغطة زر واحدة، سنركب <strong>نفس يافطتك</strong> على واجهة محل حقيقية في الشارع!
+                            </p>
+                        </div>
+
+                        <!-- 2. حالة التحميل (Loading) -->
+                        <div id="loading-state" class="hidden absolute inset-0 bg-dark-950/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center p-6 text-center">
+                            <div class="relative w-16 h-16 mb-4">
+                                <div class="absolute inset-0 rounded-full border-4 border-zinc-800"></div>
+                                <div class="absolute inset-0 rounded-full border-4 border-brand-500 border-t-transparent animate-spin"></div>
+                                <i class="fa-solid fa-wand-magic-sparkles text-brand-400 absolute inset-0 flex items-center justify-center text-xl"></i>
+                            </div>
+                            <h4 class="text-base font-bold text-white mb-1" id="loading-step-title">جاري هندسة المشهد الواقعي...</h4>
+                            <p class="text-xs text-zinc-400 max-w-xs" id="loading-step-desc">نضيف الآن تفاصيل الخامات، الإضاءة الطبيعية، وواقعية الحروف البارزة</p>
+                        </div>
+
+                        <!-- 3. عرض الصورة المولدة -->
+                        <img id="result-image" src="" alt="التصميم المولد" class="hidden max-w-full max-h-[550px] rounded-xl shadow-2xl object-contain transition-all duration-500">
+                    </div>
+
+                    <!-- قسم التعديل الذكي على الصورة الحالية (Multi-turn Editing) -->
+                    <div id="edit-panel" class="hidden p-4 bg-dark-800/90 border-t border-zinc-800">
+                        <label class="text-xs font-bold text-brand-400 mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-sliders"></i>
+                            تعديل احترافي على هذه الصورة (بدون البدء من الصفر):
+                        </label>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" id="edit-instruction" 
+                                class="flex-1 bg-dark-900 border border-zinc-700 focus:border-brand-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-zinc-500"
+                                placeholder="مثال: اجعل الإضاءة أكثر دفئاً، أو أضف شواية فحم ودخان أمام المحل، أو غير لون الحروف للأحمر...">
+                            <button id="edit-btn" onclick="editCurrentImage()" 
+                                class="bg-zinc-100 hover:bg-white text-black font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shrink-0">
+                                <i class="fa-solid fa-sparkles text-amber-600"></i>
+                                تطبيق التعديل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- عرض الهندسة الخفية (Prompt Engineering) ليتعلم المستخدم سر الواقعية -->
+                <div id="prompt-inspector" class="hidden bg-dark-900/70 border border-zinc-800/80 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-xs font-bold text-zinc-400 flex items-center gap-1.5">
+                            <i class="fa-solid fa-code text-brand-400"></i>
+                            الوصف الهندسي الاحترافي المستخدم خلف الكواليس:
+                        </span>
+                        <button onclick="copyEngineeredPrompt()" class="text-[11px] text-zinc-400 hover:text-white flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> نسخ
+                        </button>
+                    </div>
+                    <p id="engineered-prompt-text" dir="ltr" class="text-[11px] text-zinc-500 font-mono bg-dark-950 p-2.5 rounded-lg border border-zinc-800/80 leading-relaxed select-all"></p>
+                </div>
+
+                <!-- سجل التصاميم السابقة في الجلسة -->
+                <div id="history-section" class="hidden space-y-2.5">
+                    <h4 class="text-xs font-bold text-zinc-400 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        تصاميمك السابقة في هذه الجلسة:
+                    </h4>
+                    <div id="history-grid" class="grid grid-cols-4 sm:grid-cols-5 gap-2.5"></div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- نافذة شرح أسرار الواقعية (Modal) -->
+    <div id="guide-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-dark-900 border border-zinc-700 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-award text-brand-400"></i>
+                    لماذا تبدو صور هذا الموقع واقعية وليست كرتونية؟
+                </h3>
+                <button onclick="toggleGuideModal()" class="text-zinc-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="space-y-3 text-xs sm:text-sm text-zinc-300 leading-relaxed">
+                <p>معظم أدوات الذكاء الاصطناعي تعطي صوراً بلاستيكية لأن المستخدم يكتب وصفاً عاماً. هنا نقوم بـ 3 خطوات تلقائية:</p>
+                <ul class="space-y-2 list-disc list-inside text-zinc-400">
+                    <li><strong class="text-white">محاكاة الكاميرا الحقيقية:</strong> نضيف إعدادات عدسات التصوير المعماري (35mm lens, f/2.8, natural grain) لإزالة ملمس الرسم الرقمي.</li>
+                    <li><strong class="text-white">تحديد الخامات الفيزيائية:</strong> نترجم اختيارك إلى خامات حقيقية مثل (Brushed metal, Alucobond cladding, charred wood, backlit LED).</li>
+                    <li><strong class="text-white">محرك النصوص المتطور:</strong> نستخدم أحدث نماذج توليد الصور القادرة على رسم الحروف العربية والإنجليزية بدقة متناهية على اليافطات.</li>
+                </ul>
+            </div>
+            <div class="pt-2 flex justify-end">
+                <button onclick="toggleGuideModal()" class="bg-brand-500 hover:bg-brand-400 text-black font-bold text-xs px-5 py-2.5 rounded-xl transition">
+                    فهمت، لنبدأ التصميم!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // إعدادات الحالة والمتغيرات العامة
+        // ==========================================
+        const apiKey = ""; // يتم توفير المفتاح تلقائياً في بيئة التشغيل
+        let selectedMaterial = "3d_acrylic";
+        let selectedDesignType = "signboard"; // 'signboard' | 'social' | 'menu' | 'card' | 'packaging' | 'custom'
+        let sizeInputMode = "preset"; // 'preset' | 'manual'
+        let currentDesignMode = "flat"; // 'flat' = تصميم للطباعة 2D | 'mockup' = تركيب على الواجهة 3D
+        let lastFlatBannerBase64 = null;  // حفظ صورة اليافطة المسطحة لتركيبها على الواجهة
+        let lastFlatBannerMime = "image/png";
+        let currentChatHistory = []; // لحفظ سياق المحادثة للتعديل التفاعلي على نفس الصورة
+        let generatedHistory = [];   // لحفظ الصور المولدة في الجلسة
+
+        // تهيئة أزرار اختيار نوع التصميم والخامات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تهيئة أزرار نوع التصميم
+            const designTypeBtns = document.querySelectorAll('.design-type-btn');
+            designTypeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    designTypeBtns.forEach(b => {
+                        b.classList.remove('active', 'border-brand-500', 'bg-brand-500/15', 'text-white');
+                        b.classList.add('border-zinc-700', 'bg-dark-900', 'text-zinc-300');
+                        const icon = b.querySelector('i');
+                        if (icon) { icon.classList.remove('text-brand-400'); icon.classList.add('text-zinc-400'); }
+                    });
+                    btn.classList.add('active', 'border-brand-500', 'bg-brand-500/15', 'text-white');
+                    btn.classList.remove('border-zinc-700', 'bg-dark-900', 'text-zinc-300');
+                    const activeIcon = btn.querySelector('i');
+                    if (activeIcon) { activeIcon.classList.remove('text-zinc-400'); activeIcon.classList.add('text-brand-400'); }
+
+                    selectedDesignType = btn.getAttribute('data-type');
+                    handleDesignTypeChange(selectedDesignType);
+                });
+            });
+
+            // 2. تهيئة أزرار اختيار الخامات
+            const materialBtns = document.querySelectorAll('.material-btn');
+            materialBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    materialBtns.forEach(b => {
+                        b.classList.remove('active', 'border-brand-500', 'bg-brand-500/10');
+                        b.classList.add('border-zinc-700', 'bg-dark-800');
+                        const icon = b.querySelector('.check-icon');
+                        if (icon) icon.classList.add('hidden');
+                    });
+                    btn.classList.add('active', 'border-brand-500', 'bg-brand-500/10');
+                    btn.classList.remove('border-zinc-700', 'bg-dark-800');
+                    const activeIcon = btn.querySelector('.check-icon');
+                    if (activeIcon) activeIcon.classList.remove('hidden');
+                    
+                    selectedMaterial = btn.getAttribute('data-material');
+                    const customMatWrapper = document.getElementById('custom-material-wrapper');
+                    if (selectedMaterial === 'custom_material') {
+                        customMatWrapper.classList.remove('hidden');
+                        document.getElementById('custom-material-input').focus();
+                    } else {
+                        customMatWrapper.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // تحديث الواجهة بناءً على نوع التصميم المختار
+        function handleDesignTypeChange(type) {
+            const customTypeWrapper = document.getElementById('custom-design-type-wrapper');
+            const stageSwitcher = document.getElementById('stage-switcher-wrapper');
+            const lightingWrapper = document.getElementById('lighting-wrapper');
+            const genBtnText = document.getElementById('gen-btn-text');
+            const genBtnIcon = document.getElementById('gen-btn-icon');
+            const aspectSelect = document.getElementById('aspect-ratio');
+            const statusBadge = document.getElementById('status-badge');
+
+            if (type === 'custom') {
+                customTypeWrapper.classList.remove('hidden');
+                document.getElementById('custom-design-type').focus();
+            } else {
+                customTypeWrapper.classList.add('hidden');
+            }
+
+            if (type === 'signboard') {
+                stageSwitcher.classList.remove('hidden');
+                lightingWrapper.classList.remove('hidden');
+                setDesignMode('flat');
+            } else {
+                // في حالة التصاميم الأخرى (سوشيال، منيو، كارت، تغليف، مخصص)
+                currentDesignMode = 'flat';
+                stageSwitcher.classList.add('hidden');
+                lightingWrapper.classList.add('hidden');
+                genBtnIcon.className = "fa-solid fa-wand-magic-sparkles text-lg";
+                genBtnText.textContent = "توليد التصميم الاحترافي الآن";
+                statusBadge.textContent = "وضع الاستوديو: جاهز لتوليد التصميم";
+
+                // ضبط مقاس افتراضي ذكي لكل نوع
+                if (type === 'social') aspectSelect.value = '1:1';
+                else if (type === 'menu') aspectSelect.value = '3:4';
+                else if (type === 'card') aspectSelect.value = '4:3';
+                else if (type === 'packaging') aspectSelect.value = '1:1';
+            }
+        }
+
+        // التبديل بين المقاس الجاهز والمقاس اليدوي
+        function toggleSizeMode(mode) {
+            sizeInputMode = mode;
+            const presetBtn = document.getElementById('size-mode-preset');
+            const manualBtn = document.getElementById('size-mode-manual');
+            const presetBox = document.getElementById('preset-size-box');
+            const manualBox = document.getElementById('manual-size-box');
+
+            if (mode === 'preset') {
+                presetBtn.className = "px-2.5 py-1 rounded-md bg-brand-500 text-black font-bold transition";
+                manualBtn.className = "px-2.5 py-1 rounded-md text-zinc-400 hover:text-white font-semibold transition";
+                presetBox.classList.remove('hidden');
+                manualBox.classList.add('hidden');
+            } else {
+                manualBtn.className = "px-2.5 py-1 rounded-md bg-brand-500 text-black font-bold transition";
+                presetBtn.className = "px-2.5 py-1 rounded-md text-zinc-400 hover:text-white font-semibold transition";
+                manualBox.classList.remove('hidden');
+                presetBox.classList.add('hidden');
+                updateCalculatedRatio();
+            }
+        }
+
+        // حساب أقرب نسبة أبعاد مدعومة تلقائياً من المقاس اليدوي المدخل
+        function getBestAspectRatioFromManual() {
+            const w = parseFloat(document.getElementById('manual-width').value) || 1;
+            const h = parseFloat(document.getElementById('manual-height').value) || 1;
+            const ratio = w / h;
+
+            const supported = [
+                { label: "21:9", val: 21 / 9, desc: "بانورامي عريض جداً" },
+                { label: "16:9", val: 16 / 9, desc: "عرضي قياسي" },
+                { label: "4:3",  val: 4 / 3,  desc: "مستطيل عرضي" },
+                { label: "1:1",  val: 1 / 1,  desc: "مربع متساوي" },
+                { label: "4:5",  val: 4 / 5,  desc: "رأسي (سوشيال)" },
+                { label: "3:4",  val: 3 / 4,  desc: "رأسي (منيو / A4)" },
+                { label: "9:16", val: 9 / 16, desc: "طولي جداً (ستوري / رول أب)" }
+            ];
+
+            let closest = supported[0];
+            let minDiff = Math.abs(ratio - closest.val);
+
+            for (let i = 1; i < supported.length; i++) {
+                const diff = Math.abs(ratio - supported[i].val);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closest = supported[i];
+                }
+            }
+            return closest;
+        }
+
+        function updateCalculatedRatio() {
+            const closest = getBestAspectRatioFromManual();
+            const badge = document.getElementById('calculated-ratio-badge');
+            if (badge) {
+                badge.textContent = `${closest.label} (${closest.desc})`;
+            }
+        }
+
+        function getActiveDimensionInfo() {
+            if (sizeInputMode === 'preset') {
+                const ratio = document.getElementById('aspect-ratio').value;
+                return {
+                    aspectRatio: ratio,
+                    physicalText: `Aspect ratio ${ratio}`
+                };
+            } else {
+                const w = document.getElementById('manual-width').value || 100;
+                const h = document.getElementById('manual-height').value || 100;
+                const unit = document.getElementById('size-unit').value;
+                const unitNames = { cm: 'centimeters (cm)', m: 'meters (m)', px: 'pixels (px)' };
+                const closest = getBestAspectRatioFromManual();
+                return {
+                    aspectRatio: closest.label,
+                    physicalText: `Exact physical dimensions: ${w} x ${h} ${unitNames[unit]} (mapped to ${closest.label} proportion)`
+                };
+            }
+        }
+
+        function getDesignTypeDescription() {
+            const typeMap = {
+                signboard: "Commercial Storefront Signboard / Outdoor Shop Banner",
+                social: "High-converting Social Media Advertisement Post / Promotional Graphic",
+                menu: "Restaurant Menu / Promotional Flyer Layout",
+                card: "Luxury Professional Business Card Design",
+                packaging: "Product Packaging / Box / Label Design",
+                custom: document.getElementById('custom-design-type').value.trim() || "Custom Commercial Graphic Design"
+            };
+            return typeMap[selectedDesignType] || "Commercial Graphic Design";
+        }
+
+        function fillExamplePrompt() {
+            applyPreset('grill');
+            showToast('تم تعبئة مثال لمطعم مشويات ع الفحم!', 'info');
+        }
+
+        // ==========================================
+        // التبديل بين وضع الطباعة (Flat) ووضع الواجهة (Mockup)
+        // ==========================================
+        function setDesignMode(mode) {
+            currentDesignMode = mode;
+            const flatBtn = document.getElementById('mode-flat-btn');
+            const mockupBtn = document.getElementById('mode-mockup-btn');
+            const lightingWrapper = document.getElementById('lighting-wrapper');
+            const genBtnText = document.getElementById('gen-btn-text');
+            const genBtnIcon = document.getElementById('gen-btn-icon');
+            const promptLabel = document.getElementById('prompt-label');
+            const statusBadge = document.getElementById('status-badge');
+
+            if (mode === 'flat') {
+                flatBtn.className = "py-2 px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-2 bg-brand-500 text-black shadow";
+                mockupBtn.className = "py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white";
+                lightingWrapper.classList.add('opacity-50', 'pointer-events-none');
+                genBtnIcon.className = "fa-solid fa-print text-lg";
+                genBtnText.textContent = "تصميم اليافطة للطباعة (المرحلة 1)";
+                promptLabel.textContent = "تفاصيل تصميم اليافطة وألوانها:";
+                statusBadge.textContent = "المرحلة 1: وضع تصميم اليافطة للطباعة";
+            } else {
+                mockupBtn.className = "py-2 px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-2 bg-brand-500 text-black shadow";
+                flatBtn.className = "py-2 px-3 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 text-zinc-400 hover:text-white";
+                lightingWrapper.classList.remove('opacity-50', 'pointer-events-none');
+                genBtnIcon.className = "fa-solid fa-store text-lg";
+                genBtnText.textContent = "توليد واجهة محل كاملة باليافطة";
+                promptLabel.textContent = "تفاصيل الواجهة والشارع المحيط:";
+                statusBadge.textContent = "المرحلة 2: وضع المعاينة الواقعية على الواجهة";
+            }
+        }
+
+        function selectMaterialUI(matKey) {
+            const btn = document.querySelector(`.material-btn[data-material="${matKey}"]`);
+            if (btn) btn.click();
+        }
+
+        function applyPreset(type) {
+            const promptEl = document.getElementById('user-prompt');
+            const textEl = document.getElementById('sign-text');
+            const subtextEl = document.getElementById('sign-subtext');
+            const lightingEl = document.getElementById('lighting-select');
+
+            if (type === 'grill') {
+                promptEl.value = currentDesignMode === 'flat' 
+                    ? "تصميم بانر يافطة مطعم مشويات على الفحم، خلفية سوداء فخمة مع جمر فحم متوهج وألسنة نار ذهبية خفيفة في الأسفل، وتصميم خط عربي قوي وواضح."
+                    : "واجهة محل مشويات وكبابجي فخم على الفحم في شارع تجاري حيوي، تظهر من أسفل اليافطة شواية فحم متوهجة يتصاعد منها دخان شهي خفيف.";
+                textEl.value = "مشويات البرنس ع الفحم";
+                subtextEl.value = "كباب • كفتة • طرب • فراخ مشوية";
+                lightingEl.value = "cinematic_smoke";
+                selectMaterialUI('rustic_wood');
+            } else if (type === 'cafe') {
+                promptEl.value = currentDesignMode === 'flat'
+                    ? "تصميم يافطة كافيه ومحمصة قهوة مختصة، خلفية داكنة أنيقة مع رسمة حبوب قهوة محمصة وبخار دافئ بأسلوب جرافيكي راقي."
+                    : "واجهة كافيه ومحمصة قهوة مختصة بتصميم عصري دافئ، واجهة زجاجية كبيرة يظهر من خلالها ديكور داخلي أنيق وإضاءة معلقة دافئة.";
+                textEl.value = "محمصة وكافيه أرابيكا";
+                subtextEl.value = "قهوة مختصة • مخبوزات طازجة";
+                lightingEl.value = "golden_hour";
+                selectMaterialUI('3d_acrylic');
+            } else if (type === 'barber') {
+                promptEl.value = currentDesignMode === 'flat'
+                    ? "تصميم يافطة صالون حلاقة رجالي راقي، خلفية أسود مطفي مع زخارف ذهبية كلاسيكية وأيقونة مقص وموس حلاقة أنيقة."
+                    : "واجهة صالون حلاقة رجالي كلاسيكي راقي، واجهة من الطوب الداكن والزجاج الشفاف يظهر كراسي الحلاقة الجلدية بالداخل.";
+                textEl.value = "صالون السلطان";
+                subtextEl.value = "حلاقة • عناية بالبشرة • VIP";
+                lightingEl.value = "night_street";
+                selectMaterialUI('neon_industrial');
+            } else if (type === 'burger') {
+                promptEl.value = currentDesignMode === 'flat'
+                    ? "تصميم يافطة مطعم سماش برجر عصري، ألوان الأسود والبرتقالي الناري مع إضاءة نيون جرافيكية جذابة وتصميم شبابي قوي."
+                    : "واجهة مطعم سماش برجر عصري في منطقة مطاعم حيوية، تصميم صناعي جذاب مع نافذة طلبات خارجية وإضاءة نيون دافئة.";
+                textEl.value = "فاير سماش برجر";
+                subtextEl.value = "برجر لحم بلدي مشوي ع اللهب";
+                lightingEl.value = "night_street";
+                selectMaterialUI('3d_acrylic');
+            }
+        }
+
+        // ==========================================
+        // المحرك الذكي لهندسة الوصف الواقعي (Prompt Enhancer)
+        // ==========================================
+        async function enhancePromptWithGemini(userDesc, signText, signSubtext, material, customMaterialText, lighting, mode, designTypeDesc, dimensionInfo) {
+            const materialDescriptions = {
+                "3d_acrylic": "3D backlit extruded acrylic and brushed stainless steel channel letters on matte black Alucobond background",
+                "rustic_wood": "heavy charred cedar wood texture with thick wrought-iron and glowing warm-white metallic lettering, artisanal craftsmanship",
+                "neon_industrial": "warm glowing glass neon tubing combined with matte dark metal letters on textured dark industrial background",
+                "luxury_gold": "polished mirror-gold metallic 3D letters with subtle warm halo glow on dark Nero Marquina marble texture",
+                "modern_print": "high-resolution commercial print graphic layout, crisp typography, balanced visual hierarchy, vibrant professional color grading",
+                "custom_material": customMaterialText
+                    ? `Custom user-specified material/style (translate from Arabic and apply physically and artistically): "${customMaterialText}"`
+                    : "authentic high-end physical commercial material texture"
+            };
+
+            const lightingDescriptions = {
+                "night_street": "shot at night on a bustling realistic city street, glowing storefront signage casting natural reflections on the wet asphalt and glass windows, ambient street lights",
+                "golden_hour": "shot during golden hour sunset, warm natural sunlight grazing the storefront texture, soft shadows, rich realistic colors",
+                "daylight": "shot in natural overcast daylight, crisp architectural photography, true-to-life colors, clear textures without artificial glare",
+                "cinematic_smoke": "shot at dusk with atmospheric warm amber lighting, subtle wisps of real charcoal grill smoke rising naturally in front of the storefront catching the sign's warm glow"
+            };
+
+            let systemInstruction = "";
+            let rawDetails = "";
+
+            if (mode === "flat" || selectedDesignType !== "signboard") {
+                // هندسة وصف التصميم المسطح الجاهز للطباعة أو السوشيال ميديا
+                systemInstruction = `You are a master commercial graphic designer and print production specialist.
+Your job is to convert the user's Arabic request into a detailed English image generation prompt for a COMPLETELY FLAT, STRAIGHT-ON, ORTHOGRAPHIC 2D GRAPHIC DESIGN (no street, no building, no perspective distortion, no 3D room mockup unless explicitly requested).
+CRITICAL RULES:
+1. The image MUST fill the entire canvas edge-to-edge as a flat, print-ready or digital-ready graphic design (straight 90-degree front view, zero perspective tilt).
+2. Respect the requested Design Type (${designTypeDesc}) and Physical Dimensions (${dimensionInfo.physicalText}) in layout composition and typography scale.
+3. If the user provided a custom material/style in Arabic, accurately translate it into rich physical/visual texture terms in English.
+4. Ensure any Arabic or English text requested is placed in quotes and rendered with ultra-sharp, clean, legible Arabic calligraphy/typography.
+5. Output ONLY the final English prompt text, nothing else.`;
+
+                rawDetails = `
+Design Category / Type: ${designTypeDesc}
+Dimensions & Proportions: ${dimensionInfo.physicalText}
+User Graphic Details: ${userDesc}
+Main Title Text (MUST be prominent, crystal clear): "${signText || ''}"
+Sub-text / Details (smaller neat text): "${signSubtext || ''}"
+Material / Visual Texture Style: ${materialDescriptions[material]}
+`;
+            } else {
+                // هندسة وصف الواجهة الكاملة في الشارع (3D Storefront Mockup)
+                systemInstruction = `You are an expert commercial architectural photographer and signage designer. 
+Your job is to convert the user's Arabic request into a highly detailed, hyper-realistic English prompt for an image generation model.
+CRITICAL RULES FOR REALISM:
+1. Never use buzzwords like "hyperrealistic", "8k", "masterpiece", or "photorealistic" alone. Instead, describe real physical camera optics: "Shot on Sony A7R IV, 35mm lens, f/4, natural film grain, authentic street environment, imperfect real-world textures".
+2. Ensure any Arabic or English text requested by the user is explicitly placed in quotes so the image generator renders it accurately and legibly on the main storefront sign.
+3. If the user described a custom material in Arabic, translate it into accurate physical construction materials (mounting brackets, real light diffusion, authentic surface texture).
+4. Output ONLY the final English prompt text, nothing else.`;
+
+                rawDetails = `
+User Request: ${userDesc}
+Dimensions & Proportions: ${dimensionInfo.physicalText}
+Main Sign Text (MUST appear clearly on the main sign): "${signText || 'No specific text, use appropriate authentic Arabic business name'}"
+Sub-text / Tagline (optional, smaller text below main title): "${signSubtext || ''}"
+Signage Material & Construction: ${materialDescriptions[material]}
+Lighting & Atmosphere: ${lightingDescriptions[lighting]}
+Camera Perspective: Eye-level commercial street photography showing the storefront facade and main horizontal signboard clearly.
+`;
+            }
+
+            try {
+                const payload = {
+                    contents: [{ parts: [{ text: rawDetails }] }],
+                    systemInstruction: { parts: [{ text: systemInstruction }] }
+                };
+
+                const response = await fetchWithBackoff(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                const result = await response.json();
+                const enhancedText = result?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+                
+                if (enhancedText) {
+                    return enhancedText;
+                }
+            } catch (err) {
+                console.warn("Fallback to local prompt builder:", err);
+            }
+
+            // خطة بديلة في حال تعذر الاتصال بنموذج تحسين النصوص
+            if (mode === "flat" || selectedDesignType !== "signboard") {
+                let fallbackFlat = `Flat 2D print-ready ${designTypeDesc} filling the entire frame edge-to-edge, straight-on orthographic view, no perspective, no background mockup. ${dimensionInfo.physicalText}. ${userDesc}. `;
+                if (signText) fallbackFlat += `Prominently displays clean, sharp, professional Arabic typography reading "${signText}". `;
+                if (signSubtext) fallbackFlat += `Below it in smaller neat Arabic text is "${signSubtext}". `;
+                fallbackFlat += `Style & Texture: ${materialDescriptions[material]}, high-resolution commercial graphic design.`;
+                return fallbackFlat;
+            } else {
+                let fallback = `Authentic commercial street photography of a real storefront. ${userDesc}. `;
+                if (signText) fallback += `The main storefront signboard prominently displays the Arabic text "${signText}" in ${materialDescriptions[material]}. `;
+                if (signSubtext) fallback += `Below it in smaller neat letters is "${signSubtext}". `;
+                fallback += `${lightingDescriptions[lighting]}. Shot on 35mm lens, natural architectural photography, realistic textures, authentic street details.`;
+                return fallback;
+            }
+        }
+
+        // ==========================================
+        // توليد الصورة الواقعية باستخدام Gemini 3.1 Flash Image
+        // ==========================================
+        async function generateRealisticImage() {
+            const userPrompt = document.getElementById('user-prompt').value.trim();
+            const signText = document.getElementById('sign-text').value.trim();
+            const signSubtext = document.getElementById('sign-subtext').value.trim();
+            const customMaterialText = document.getElementById('custom-material-input').value.trim();
+            const lighting = document.getElementById('lighting-select').value;
+            const dimensionInfo = getActiveDimensionInfo();
+            const designTypeDesc = getDesignTypeDescription();
+
+            if (!userPrompt && !signText) {
+                showToast('من فضلك اكتب وصفاً للتصميم أو العنوان الرئيسي أولاً!', 'error');
+                document.getElementById('user-prompt').focus();
+                return;
+            }
+
+            if (selectedMaterial === 'custom_material' && !customMaterialText) {
+                showToast('من فضلك اكتب وصف الخامة اللي محتاجها الأول!', 'error');
+                document.getElementById('custom-material-input').focus();
+                return;
+            }
+
+            const isSignboardFlat = (selectedDesignType === 'signboard' && currentDesignMode === 'flat');
+            setLoadingState(
+                true, 
+                'المرحلة 1/2: ترجمة طلبك وهندسة التصميم...', 
+                'نحول وصفك والخامة والمقاس إلى مواصفات تصميم وطباعة احترافية'
+            );
+
+            try {
+                // الخطوة 1: تحسين الوصف وترجمة الخامة المخصصة والمقاس
+                const engineeredPrompt = await enhancePromptWithGemini(
+                    userPrompt, signText, signSubtext, selectedMaterial, customMaterialText, lighting, currentDesignMode, designTypeDesc, dimensionInfo
+                );
+                
+                // عرض الوصف الهندسي للمستخدم للشفافية والتعلم
+                document.getElementById('engineered-prompt-text').textContent = engineeredPrompt;
+                document.getElementById('prompt-inspector').classList.remove('hidden');
+
+                // الخطوة 2: استدعاء نموذج توليد الصور المتقدم (gemini-3.1-flash-image)
+                setLoadingState(
+                    true, 
+                    'المرحلة 2/2: تنفيذ التصميم بدقة عالية...', 
+                    `يتم الآن رسم التصميم بأبعاد (${dimensionInfo.aspectRatio}) وتفاصيل واقعية`
+                );
+
+                const userTurn = {
+                    role: 'user',
+                    parts: [{ text: engineeredPrompt }]
+                };
+
+                const payload = {
+                    contents: [userTurn],
+                    generationConfig: {
+                        responseModalities: ['IMAGE'],
+                        imageConfig: {
+                            aspectRatio: dimensionInfo.aspectRatio
+                        }
+                    }
+                };
+
+                const response = await fetchWithBackoff(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                const result = await response.json();
+                const candidate = result?.candidates?.[0];
+                const imagePart = candidate?.content?.parts?.find(p => p.inlineData);
+
+                if (!imagePart || !imagePart.inlineData?.data) {
+                    throw new Error("لم يتم استلام بيانات الصورة من الخادم.");
+                }
+
+                // حفظ سجل المحادثة لدعم التعديل التفاعلي لاحقاً (Multi-turn Editing)
+                currentChatHistory = [
+                    userTurn,
+                    candidate.content
+                ];
+
+                const mimeType = imagePart.inlineData.mimeType || 'image/png';
+                const base64Data = imagePart.inlineData.data;
+                const imageUrl = `data:${mimeType};base64,${base64Data}`;
+
+                // إذا كنا في وضع اليافطة المسطحة، نحفظ هذه الصورة لنستخدمها كمرجع عند تركيبها على الواجهة!
+                if (isSignboardFlat) {
+                    lastFlatBannerBase64 = base64Data;
+                    lastFlatBannerMime = mimeType;
+                }
+
+                displayGeneratedImage(imageUrl, signText || userPrompt.slice(0, 25), isSignboardFlat);
+                showToast(isSignboardFlat ? 'تم تصميم اليافطة للطباعة! يمكنك الآن معاينتها على الواجهة.' : 'تم توليد التصميم الاحترافي بنجاح!', 'success');
+
+            } catch (error) {
+                console.error("Generation error:", error);
+                showToast('حدث خطأ أثناء التوليد، يرجى المحاولة مرة أخرى.', 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // ==========================================
+        // التعديل التفاعلي على الصورة الحالية (Multi-turn Editing)
+        // ==========================================
+        async function editCurrentImage() {
+            const instruction = document.getElementById('edit-instruction').value.trim();
+            if (!instruction) {
+                showToast('اكتب التعديل الذي تريده أولاً!', 'error');
+                return;
+            }
+            if (currentChatHistory.length === 0) {
+                showToast('لا توجد صورة حالية لتعديلها.', 'error');
+                return;
+            }
+
+            setLoadingState(true, 'جاري تطبيق تعديلاتك...', 'نحافظ على التصميم الأساسي وننفذ التعديل المطلوب بدقة');
+
+            try {
+                const editTurn = {
+                    role: 'user',
+                    parts: [{ text: `Modify the previous image according to this instruction while maintaining maximum realism and keeping the main Arabic text legible and accurate: ${instruction}` }]
+                };
+
+                const updatedContents = [...currentChatHistory, editTurn];
+                const payload = {
+                    contents: updatedContents,
+                    generationConfig: {
+                        responseModalities: ['IMAGE']
+                    }
+                };
+
+                const response = await fetchWithBackoff(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                const result = await response.json();
+                const candidate = result?.candidates?.[0];
+                const imagePart = candidate?.content?.parts?.find(p => p.inlineData);
+
+                if (!imagePart || !imagePart.inlineData?.data) {
+                    throw new Error("فشل تعديل الصورة.");
+                }
+
+                currentChatHistory = [...updatedContents, candidate.content];
+
+                const mimeType = imagePart.inlineData.mimeType || 'image/png';
+                const base64Data = imagePart.inlineData.data;
+                const imageUrl = `data:${mimeType};base64,${base64Data}`;
+
+                const isFlat = currentDesignMode === 'flat';
+                if (isFlat) {
+                    lastFlatBannerBase64 = base64Data;
+                    lastFlatBannerMime = mimeType;
+                }
+
+                displayGeneratedImage(imageUrl, instruction.slice(0, 20), isFlat);
+                document.getElementById('edit-instruction').value = '';
+                showToast('تم تطبيق التعديل بنجاح!', 'success');
+
+            } catch (error) {
+                console.error("Edit error:", error);
+                showToast('تعذر تنفيذ التعديل، حاول صياغته بشكل أوضح.', 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // ==========================================
+        // المرحلة الثانية: تركيب اليافطة المصممة على واجهة محل حقيقية (Image-to-Image Mockup)
+        // ==========================================
+        async function mountCurrentBannerToStorefront() {
+            if (!lastFlatBannerBase64) {
+                showToast('صمّم اليافطة أولاً ثم اضغط لعرضها على الواجهة!', 'error');
+                return;
+            }
+
+            const lighting = document.getElementById('lighting-select').value;
+            const userPrompt = document.getElementById('user-prompt').value.trim();
+
+            const materialMountDesc = {
+                "3d_acrylic": "extruded 3D backlit acrylic and metal signage mounted on black Alucobond fascia",
+                "rustic_wood": "heavy rustic wood and wrought-iron illuminated signboard mounted above the shop entrance",
+                "neon_industrial": "illuminated lightbox and neon-accented signboard mounted on a dark brick storefront",
+                "luxury_gold": "luxurious metallic gold-trimmed illuminated signboard mounted on dark marble facade"
+            };
+
+            const lightingMountDesc = {
+                "night_street": "at night on a bustling city street, warm glowing light from the sign reflecting on the glass storefront and wet sidewalk",
+                "golden_hour": "during warm golden hour sunset, natural sunlight hitting the storefront",
+                "daylight": "in crisp natural daylight on an authentic commercial street",
+                "cinematic_smoke": "at dusk with warm amber lighting and subtle wisps of authentic charcoal grill smoke rising from a grill station below the sign"
+            };
+
+            setLoadingState(
+                true,
+                'جاري تركيب يافطتك على واجهة المحل...',
+                'نأخذ نفس تصميمك بالضبط ونركبه بشكل واقعي 3D على واجهة محل حقيقية في الشارع'
+            );
+
+            try {
+                const mountPrompt = `Take this exact flat banner design and mount it realistically as a physical, illuminated main horizontal storefront signboard above the entrance of a real commercial shop facade. Keep the exact Arabic text, fonts, colors, and graphic layout from the provided banner image completely intact. The sign is constructed as ${materialMountDesc[selectedMaterial]}. Scene context: ${userPrompt}. Lighting: ${lightingMountDesc[lighting]}. Shot on Sony A7R IV, 35mm architectural street photography lens, natural reflections on shop windows, authentic street pavement and surroundings.`;
+
+                document.getElementById('engineered-prompt-text').textContent = mountPrompt;
+
+                const imageToImageTurn = {
+                    role: 'user',
+                    parts: [
+                        { text: mountPrompt },
+                        {
+                            inlineData: {
+                                mimeType: lastFlatBannerMime,
+                                data: lastFlatBannerBase64
+                            }
+                        }
+                    ]
+                };
+
+                const payload = {
+                    contents: [imageToImageTurn],
+                    generationConfig: {
+                        responseModalities: ['IMAGE'],
+                        imageConfig: {
+                            aspectRatio: "16:9" // الواجهة الكاملة تكون أفضل بمقاس 16:9
+                        }
+                    }
+                };
+
+                const response = await fetchWithBackoff(
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                const result = await response.json();
+                const candidate = result?.candidates?.[0];
+                const imagePart = candidate?.content?.parts?.find(p => p.inlineData);
+
+                if (!imagePart || !imagePart.inlineData?.data) {
+                    throw new Error("فشل تركيب اليافطة على الواجهة.");
+                }
+
+                // تحديث سجل المحادثة لدعم تعديل الواجهة لاحقاً
+                currentChatHistory = [
+                    imageToImageTurn,
+                    candidate.content
+                ];
+
+                const imageUrl = `data:${imagePart.inlineData.mimeType || 'image/png'};base64,${imagePart.inlineData.data}`;
+                
+                // تحديث الواجهة لوضع المعاينة على الواجهة
+                setDesignMode('mockup');
+                displayGeneratedImage(imageUrl, "معاينة الواجهة الكاملة", false);
+                showToast('تم تركيب يافطتك على واجهة المحل بنجاح!', 'success');
+
+            } catch (error) {
+                console.error("Mount error:", error);
+                showToast('حدث خطأ أثناء تركيب اليافطة على الواجهة، حاول مرة أخرى.', 'error');
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // ==========================================
+        // دوال تحديث الواجهة والمساعدة (UI Helpers)
+        // ==========================================
+        function displayGeneratedImage(imageUrl, title, isFlatSignboard = false) {
+            const imgEl = document.getElementById('result-image');
+            const emptyState = document.getElementById('empty-state');
+            const actionsEl = document.getElementById('image-actions');
+            const mountBtn = document.getElementById('mount-to-store-btn');
+            const editPanel = document.getElementById('edit-panel');
+            const statusBadge = document.getElementById('status-badge');
+
+            imgEl.src = imageUrl;
+            imgEl.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            actionsEl.style.display = 'flex';
+            editPanel.classList.remove('hidden');
+
+            // إظهار زر "شاهدها على واجهة المحل" فقط عندما يكون التصميم يافطة محل مسطحة
+            if (isFlatSignboard && selectedDesignType === 'signboard') {
+                mountBtn.classList.remove('hidden');
+                statusBadge.textContent = 'المرحلة 1 مكتملة: يافطة جاهزة للطباعة';
+            } else if (selectedDesignType === 'signboard') {
+                mountBtn.classList.add('hidden');
+                statusBadge.textContent = 'المرحلة 2 مكتملة: معاينة الواجهة في الشارع';
+            } else {
+                mountBtn.classList.add('hidden');
+                statusBadge.textContent = 'تم توليد التصميم بنجاح وجاهز للتحميل';
+            }
+
+            // إضافة للسجل
+            generatedHistory.unshift({ url: imageUrl, title: title, isFlat: isFlatSignboard });
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const section = document.getElementById('history-section');
+            const grid = document.getElementById('history-grid');
+            
+            if (generatedHistory.length === 0) return;
+            section.classList.remove('hidden');
+            grid.innerHTML = '';
+
+            generatedHistory.forEach((item, index) => {
+                const thumb = document.createElement('button');
+                thumb.className = 'group relative aspect-video rounded-lg overflow-hidden border border-zinc-700 hover:border-brand-500 transition bg-dark-950';
+                thumb.innerHTML = `
+                    <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                        <i class="fa-solid fa-eye text-white text-xs"></i>
+                    </div>
+                `;
+                thumb.onclick = () => {
+                    document.getElementById('result-image').src = item.url;
+                    showToast('تم عرض التصميم من السجل', 'info');
+                };
+                grid.appendChild(thumb);
+            });
+        }
+
+        function setLoadingState(isLoading, title = '', desc = '') {
+            const loader = document.getElementById('loading-state');
+            const genBtn = document.getElementById('generate-btn');
+            const editBtn = document.getElementById('edit-btn');
+
+            if (isLoading) {
+                document.getElementById('loading-step-title').textContent = title;
+                document.getElementById('loading-step-desc').textContent = desc;
+                loader.classList.remove('hidden');
+                genBtn.disabled = true;
+                genBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                if (editBtn) editBtn.disabled = true;
+            } else {
+                loader.classList.add('hidden');
+                genBtn.disabled = false;
+                genBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                if (editBtn) editBtn.disabled = false;
+            }
+        }
+
+        function downloadImage() {
+            const imgEl = document.getElementById('result-image');
+            if (!imgEl.src) return;
+
+            const link = document.createElement('a');
+            link.href = imgEl.src;
+            const signName = document.getElementById('sign-text').value.trim() || 'signage-design';
+            link.download = `${signName.replace(/\s+/g, '-')}-realistic-ai.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('بدأ تحميل الصورة بجودتها الكاملة!', 'success');
+        }
+
+        function copyEngineeredPrompt() {
+            const text = document.getElementById('engineered-prompt-text').textContent;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('تم نسخ الوصف الهندسي!', 'success');
+        }
+
+        function toggleGuideModal() {
+            const modal = document.getElementById('guide-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        // نظام إشعارات مخصص (Toast) بديل لـ alert()
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-emerald-950/95 border-emerald-500/50 text-emerald-200',
+                error: 'bg-red-950/95 border-red-500/50 text-red-200',
+                info: 'bg-dark-800/95 border-zinc-600 text-zinc-200'
+            };
+
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-circle-exclamation text-red-400',
+                info: 'fa-circle-info text-brand-400'
+            };
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border shadow-xl backdrop-blur-md text-xs font-bold transition-all duration-300 transform translate-y-2 opacity-0 ${colors[type]}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icons[type]} text-base"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // تحريك الظهور
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            // الإخفاء التلقائي بعد 3.5 ثانية
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // دالة الاتصال مع إعادة المحاولة التلقائية (Exponential Backoff)
+        async function fetchWithBackoff(url, options, maxRetries = 4) {
+            let delay = 1000;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        if (response.status === 429 || response.status >= 500) {
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+                        return response;
+                    }
+                    return response;
+                } catch (err) {
+                    if (i === maxRetries - 1) throw err;
+                    await new Promise(res => setTimeout(res, delay));
+                    delay *= 2;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
